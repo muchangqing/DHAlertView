@@ -8,17 +8,33 @@
 
 #import "RQAlertCell.h"
 
+@interface RQAlertCell()
+
+@property (nonatomic, strong) UIView *selBgView;
+
+@end
+
 @implementation RQAlertCell
 
-- (void)awakeFromNib {
+- (void)awakeFromNib
+{
     [super awakeFromNib];
-    // Initialization code
+    
+    UIView *view = [UIView new];
+    self.selBgView = view;
+    
+    self.selectedBackgroundView = self.selBgView;
+    
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
 
-    // Configure the view for the selected state
+}
+
+- (void)setSelectedBackgroundViewColor:(UIColor *)selectedBackgroundViewColor
+{
+    self.selBgView.backgroundColor = selectedBackgroundViewColor;
 }
 
 @end

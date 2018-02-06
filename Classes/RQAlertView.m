@@ -35,13 +35,15 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
 @property (nonatomic, strong) UIView            *lineView;
 
-@property (nonatomic, copy)   selectValueBlock  selectBlock;
+@property (nonatomic, copy)  selectValueBlock  selectBlock;
+
+@property (nonatomic, copy) tapBackgroundBlock tapBlock;
 
 @end
 
 @implementation RQAlertView
 
-+ (RQAlertView *)showAlertView
++ (RQAlertView *)alertView
 {
         RQAlertView *bgView = [[RQAlertView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
         bgView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.2];
@@ -53,19 +55,36 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
         self = [super initWithFrame:frame];
         if (self)
         {
-                [self showView:YES];
-                [self initTap];
+                [self initializeSet];
                 [self initializeViews];
         }
         return self;
 }
 
-- (void)initTap
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
+    self = [super initWithCoder:aDecoder];
+    if (self)
+    {
+        [self initializeSet];
+        [self initializeViews];
+    }
+    return self;
+}
+
+- (void)initializeSet
+{
+    {
+        self.hiddenOfBackground = NO;
+        self.selectColor        = kUIColorFromRGB(0xEFEFEF);
+    }
+    
+    {
         self.userInteractionEnabled = YES;
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickTap)];
         tap.delegate = self;
         [self addGestureRecognizer:tap];
+    }
 }
 
 - (void)initializeViews
@@ -81,12 +100,12 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 {
         self.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
         [[UIApplication sharedApplication].keyWindow addSubview:self];
-        
-        self.alertView.alpha = 0.0;
+    
+        self.alpha = 0.0;
         
         [UIView animateWithDuration:0.3 animations:^{
                 
-                self.alertView.alpha = 1;
+                self.alpha = 1;
         }];
 }
 
@@ -155,13 +174,25 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 #pragma mark - action
 - (void)clickTap
 {
+    if (self.hiddenOfBackground)
+    {
         [self hiddenView:YES];
+        if (self.tapBlock)
+        {
+            self.tapBlock();
+        }
+    }
 }
 
 #pragma mark - setter
 - (void)setSelectValueCallBack:(selectValueBlock)block
 {
         self.selectBlock = block;
+}
+
+- (void)setTapBackgroundViewCallBack:(tapBackgroundBlock)block
+{
+    self.tapBlock = block;
 }
 
 - (void)setTitles:(NSArray *)titles
@@ -205,6 +236,7 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
         
         cell.titleLabel.text    = self.titles[indexPath.row];
         cell.lineView.hidden    = [self isLastIndex:indexPath.row];
+        cell.selectedBackgroundViewColor = self.selectColor;
         
         return cell;
 }

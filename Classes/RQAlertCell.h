@@ -15,4 +15,6 @@
 
 @property (weak, nonatomic) IBOutlet UIView *lineView;
 
+@property (nonatomic, strong) UIColor *selectedBackgroundViewColor;
+
 @end
