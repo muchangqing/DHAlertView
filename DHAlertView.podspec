@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
 
 
   s.name         = "DHAlertView"
-  s.version      = "0.0.3"
+  s.version      = "0.0.4"
   s.summary      = "A delightful iOS AlertView."
   s.description  = <<-DESC
                     It is alertView of UITableView
@@ -13,7 +13,8 @@ Pod::Spec.new do |s|
   s.author       = { "mcq" => "845891612@qq.com" }
   s.platform     = :ios, "5.0"
   s.source       = { :git => "https://github.com/muchangqing/DHAlertView.git", :tag => s.version }
-  s.source_files  = "Classes", "Classes/**/*"
+  s.source_files  = "Classes", "Classes/**/*.{h, m}"
+  s.resource = "Classes/**/*.xib"
   s.requires_arc = true
 
 end
